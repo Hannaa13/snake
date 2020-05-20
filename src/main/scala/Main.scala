@@ -3,15 +3,13 @@ import java.awt.{Color, Component, Dimension}
 import javax.swing.{JFrame, JPanel, Timer}
 
 object Main extends App {
-
-
   var listSnake: List[(Int, Int)] = List((2, 2))
   var lengthSnake = 1
-  var point = (random(59), random(39))
+  var point = newRandomPoint
   var direction = (1, 0)
 
   def newRandomPoint = {
-    point = (random(59), random(39))
+    (random(59), random(39))
   }
 
   def changeDirection(list: List[(Int, Int)], d: (Int, Int)) = {
@@ -23,8 +21,8 @@ object Main extends App {
     listSnake match {
       case list if list.head == point =>
         lengthSnake = lengthSnake + 1
-        newRandomPoint
-        drawJFrame(new RandomPoint)
+        point = newRandomPoint
+        drawJFrame(new RandomPoint(point))
         frame.getContentPane.add(new Point)
       case head :: tail if tail.contains(head) => System.exit(0)
       case _ => drawJFrame(new Point)
@@ -68,15 +66,13 @@ object Main extends App {
   frame.setVisible(true)
   frame.addKeyListener(listener)
   drawJFrame(new Point)
-  drawJFrame(new RandomPoint)
-
+  drawJFrame(new RandomPoint(point))
 
   class Point extends JPanel {
 
     import java.awt.Graphics
 
     override def paint(g: Graphics): Unit = {
-
       g.setColor(Color.GREEN)
       listSnake.foreach(xy =>
         g.fillOval(xy._1 * 10, xy._2 * 10, 10, 10))
@@ -92,7 +88,7 @@ object Main extends App {
   }
 
 
-  class RandomPoint extends JPanel {
+  class RandomPoint(point: =>  (Int, Int)) extends JPanel {
 
     import java.awt.Graphics
 
